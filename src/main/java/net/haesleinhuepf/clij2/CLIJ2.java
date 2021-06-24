@@ -241,6 +241,45 @@ public class CLIJ2 implements CLIJ2Ops {
             Byte1ToClearCLBufferConverter converter = new Byte1ToClearCLBufferConverter();
             converter.setCLIJ(clij);
             result = converter.convert(byte1);
+
+        } else if (object instanceof int[][][]) {
+            Integer3 int3 = new Integer3((int[][][]) object);
+            //System.out.println("i3 size: " + int3.data.length + "/" + int3.data[0].length + "/" + int3.data[0][0].length);
+            Integer3ToClearCLBufferConverter converter = new Integer3ToClearCLBufferConverter();
+            converter.setCLIJ(clij);
+            result = converter.convert(int3);
+        } else if (object instanceof int[][]) {
+            Integer2 int2 = new Integer2((int[][]) object);
+            //System.out.println("i2 size: " + int2.data.length + "/" + int2.data[0].length);
+            Integer2ToClearCLBufferConverter converter = new Integer2ToClearCLBufferConverter();
+            converter.setCLIJ(clij);
+            result = converter.convert(int2);
+        } else if (object instanceof int[]) {
+            Integer1 int1 = new Integer1((int[]) object);
+            //System.out.println("i1 size: " + int1.data.length);
+            Integer1ToClearCLBufferConverter converter = new Integer1ToClearCLBufferConverter();
+            converter.setCLIJ(clij);
+            result = converter.convert(int1);
+
+        } else if (object instanceof short[][][]) {
+            Short3 short3 = new Short3((short[][][]) object);
+            //System.out.println("s3 size: " + short3.data.length + "/" + short3.data[0].length + "/" + short3.data[0][0].length);
+            Short3ToClearCLBufferConverter converter = new Short3ToClearCLBufferConverter();
+            converter.setCLIJ(clij);
+            result = converter.convert(short3);
+        } else if (object instanceof short[][]) {
+            Short2 short2 = new Short2((short[][]) object);
+            //System.out.println("s2 size: " + short2.data.length + "/" + short2.data[0].length);
+            Short2ToClearCLBufferConverter converter = new Short2ToClearCLBufferConverter();
+            converter.setCLIJ(clij);
+            result = converter.convert(short2);
+        } else if (object instanceof short[]) {
+            Short1 short1 = new Short1((short[]) object);
+            //System.out.println("s1 size: " + short1.data.length);
+            Short1ToClearCLBufferConverter converter = new Short1ToClearCLBufferConverter();
+            converter.setCLIJ(clij);
+            result = converter.convert(short1);
+
         } else {
             throw new IllegalArgumentException("Conversion of " + object +
                     " / " + object.getClass().getName() + " not supported");
@@ -306,6 +345,8 @@ public class CLIJ2 implements CLIJ2Ops {
                     throw new IllegalArgumentException("Conversion of " + buffer +
                             " / " + buffer.getClass().getName() + " not supported");
                 }
+
+        /*
         } else if (input.getNativeType() == UnsignedShort) {
             if (buffer.getDimension() == 1 || (buffer.getHeight() == 1 && buffer.getDepth() == 1)) {
                 result = new ClearCLBufferToChar2Converter().convert(buffer).data[1];
@@ -317,6 +358,32 @@ public class CLIJ2 implements CLIJ2Ops {
                 throw new IllegalArgumentException("Conversion of " + buffer +
                         " / " + buffer.getClass().getName() + " not supported");
             }
+        */
+
+        } else if (input.getNativeType() == UnsignedShort) {
+            if (buffer.getDimension() == 1 || (buffer.getHeight() == 1 && buffer.getDepth() == 1)) {
+                result = new ClearCLBufferToShort2Converter().convert(buffer).data[1];
+            } else if (buffer.getDimension() == 2 || (buffer.getDepth() == 1)) {
+                result = new ClearCLBufferToShort2Converter().convert(buffer).data;
+            } else if (buffer.getDimension() == 3) {
+                result = new ClearCLBufferToShort3Converter().convert(buffer).data;
+            } else {
+                throw new IllegalArgumentException("Conversion of " + buffer +
+                        " / " + buffer.getClass().getName() + " not supported");
+            }
+            
+        } else if (input.getNativeType() == NativeTypeEnum.UnsignedInt) {
+            if (buffer.getDimension() == 1 || (buffer.getHeight() == 1 && buffer.getDepth() == 1)) {
+                result = new ClearCLBufferToInteger2Converter().convert(buffer).data[1];
+            } else if (buffer.getDimension() == 2 || (buffer.getDepth() == 1)) {
+                result = new ClearCLBufferToInteger2Converter().convert(buffer).data;
+            } else if (buffer.getDimension() == 3) {
+                result = new ClearCLBufferToInteger3Converter().convert(buffer).data;
+            } else {
+                throw new IllegalArgumentException("Conversion of " + buffer +
+                        " / " + buffer.getClass().getName() + " not supported");
+            }
+
         } else if (input.getNativeType() == UnsignedByte) {
             if (buffer.getDimension() == 1 || (buffer.getHeight() == 1 && buffer.getDepth() == 1)) {
                 result = new ClearCLBufferToByte2Converter().convert(buffer).data[1];
